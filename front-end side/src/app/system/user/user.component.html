@@ -1,0 +1,38 @@
+<table *ngIf="user">
+   <tr>
+     <td>Username</td>
+     <td>Avalable days for previous year</td>
+     <td>Avalable days for current year</td>
+     <td>Avalable days of vacation GENERAL</td>
+   </tr> 
+   <tr>
+     <td>{{user.username}}</td>
+     <td>{{user.vacationDays[0].previousYearVacationDays - user.vacationDays[0].usedDays}}</td>
+     <td>{{user.vacationDays[1].currentYearVacationDays - user.vacationDays[1].usedDays}}</td>
+     <td>{{(user.vacationDays[0].previousYearVacationDays - user.vacationDays[0].usedDays)+
+    (user.vacationDays[1].currentYearVacationDays - user.vacationDays[1].usedDays)}}</td>
+   </tr>  
+</table>
+<table>
+  <tr>
+     <td>id</td>
+     <td>Start Vacation</td>
+     <td>End Vacation</td>
+     <td>Description</td>
+   </tr> 
+   <tr *ngFor="let v of vacations">
+     <td>{{v.id}}</td>
+     <td>{{v.start_vacation}}</td>
+     <td>{{v.end_vacation}}</td>
+     <td>{{v.description}}</td>
+     <td><button (click)="editVacation(v.id)">Edit</button></td>
+     <td><button (click)="removeVacation(v.id)">Remove</button></td>
+   </tr>  
+</table>
+
+<div class="add-vacation-btn">
+     <button class="add-vacation" (click)="addVacation()">Add vacation</button>
+</div>
+<div *ngIf="isOpen">
+     <app-vacation [users]="users" [vacations]="vacations" (onVacationAdd)="newVacationAdded($event)" (onVacationUpdate)="onVacationUpdate($event)"></app-vacation>
+</div>

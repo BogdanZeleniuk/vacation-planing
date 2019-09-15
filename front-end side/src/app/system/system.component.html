@@ -1,0 +1,21 @@
+<header class="header">
+    <div *ngIf="user">
+    	<div class="header-time">
+            {{today | date: 'dd.MM.yyyy'}}
+    	</div>
+    	<span class="name">
+            Welcome, {{user.name}}
+        </span>
+        <div>
+        	<span class="vacation-general"> Available vacation days: 
+        	{{(user.vacationDays[0].previousYearVacationDays - user.vacationDays[0].usedDays)+
+        (user.vacationDays[1].currentYearVacationDays - user.vacationDays[1].usedDays)}}
+        </span>
+        </div>
+    	<button class="logout-btn" (click)="onLogout()">Logout</button>
+    </div>
+</header>
+<div class="main-content">
+	<router-outlet></router-outlet>
+</div>
+		

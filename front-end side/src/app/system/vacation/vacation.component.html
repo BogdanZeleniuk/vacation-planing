@@ -1,0 +1,55 @@
+<p>Please choise your time period of vacation</p>
+
+<div class="container">
+	<form [formGroup]="form" (ngSubmit)="onSubmit()">
+		<div class="form-group"
+				[ngClass]="{'has-error': form.get('start_vacation').invalid && form.get('start_vacation').touched}">
+			<label for="start_vacation">Start vacation:</label>
+			<input 
+					type="date" 
+					class="form-control"
+					formControlName="start_vacation"
+					id="start_vacation"
+					[value]="01.10.2019">
+					<span *ngIf="form.get('start_vacation').invalid && form.get('start_vacation').touched">
+						<span *ngIf="form.get('start_vacation')['errors'].required">
+							Please, select start day of your vacation
+						</span>
+					</span>	
+		</div>
+		<div class="form-group"
+				[ngClass]="{'has-error': form.get('end_vacation').invalid && form.get('end_vacation').touched}">
+			<label for="end_vacation">End vacation</label>
+			<input 
+					type="date" 
+					class="form-control"
+					id="end_vacation"
+					formControlName="end_vacation"
+					[value]="10.10.2019">
+					<span *ngIf="form.get('end_vacation').invalid && form.get('end_vacation').touched">
+						<span *ngIf="form.get('password')['errors'].required">
+							Please, select end day of your vacation
+						</span>
+					</span>
+		</div>
+		<div class="form-group"
+				[ngClass]="{'has-error': form.get('description').invalid && form.get('description').touched}">
+			<label for="description">Description</label>
+			<input 
+					type="text" 
+					class="form-control"
+					id="description"
+					formControlName="description">
+					<span *ngIf="form.get('description').invalid && form.get('description').touched">
+						<span *ngIf="form.get('description')['errors'].required">
+							No description of vacation
+						</span>
+					</span>
+		</div>
+		<div class="form-group">
+			<button 
+					type="submit"
+					[disabled]="form.invalid">Add vacation</button>
+		</div>
+	</form>
+</div>
