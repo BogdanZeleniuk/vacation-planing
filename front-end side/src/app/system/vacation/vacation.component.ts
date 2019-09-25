@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Observable, Subscription } from 'rxjs/Rx';
 
 
 import { User } from '../../shared/models/user.model';
@@ -28,6 +29,7 @@ export class VacationComponent implements OnInit {
 	@Output() onVacationUpdate = new EventEmitter<User>();
 	user: User;
 	vacation: Vacation;
+	subscription: Subscription;
 
   ngOnInit() {
   	this.form = new FormGroup({
@@ -62,7 +64,7 @@ export class VacationComponent implements OnInit {
   			restOfDaysToUse = this.vacationService.getAmountOfSelectedDays(formData);
   			this.vacationService.changePreviousYearUserDaysIfAllAvailable(this.user, restOfDaysToUse);
   		}
-  		this.userService.updateUser(this.user).subscribe((resp) => {
+  		this.subscription = this.userService.updateUser(this.user).subscribe((resp) => {
 			this.onVacationAdd.emit(this.vacation);
 			this.onVacationUpdate.emit(this.user);
 			formData.description = '';
@@ -72,4 +74,9 @@ export class VacationComponent implements OnInit {
   		console.log('You can not add this vacation');
   	}
   }
+
+  ngOnDestroy(){
+  		if(this.subscription) this.subscription.unsubscribe();
+  	}
+
 }

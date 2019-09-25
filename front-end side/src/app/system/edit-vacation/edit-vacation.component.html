@@ -1,1 +1,56 @@
-<p>edit-vacation works!</p>
+<p>Edit vacation {{vacation.id}}</p>
+
+<div class="container">
+	<form [formGroup]="form" (ngSubmit)="onSubmit()">
+		<div class="form-group"
+				[ngClass]="{'has-error': form.get('start_vacation').invalid && form.get('start_vacation').touched}">
+			<label for="start_vacation">Start vacation:</label>
+			<input 
+					type="date" 
+					class="form-control"
+					formControlName="start_vacation"
+					id="start_vacation"
+					[value]=vacation.start_vacation>
+					<span *ngIf="form.get('start_vacation').invalid && form.get('start_vacation').touched">
+						<span *ngIf="form.get('start_vacation')['errors'].required">
+							Please, select start day of your vacation
+						</span>
+					</span>	
+		</div>
+		<div class="form-group"
+				[ngClass]="{'has-error': form.get('end_vacation').invalid && form.get('end_vacation').touched}">
+			<label for="end_vacation">End vacation</label>
+			<input 
+					type="date" 
+					class="form-control"
+					id="end_vacation"
+					formControlName="end_vacation"
+					[value]=vacation.end_vacation>
+					<span *ngIf="form.get('end_vacation').invalid && form.get('end_vacation').touched">
+						<span *ngIf="form.get('end_vacation')['errors'].required">
+							Please, select end day of your vacation
+						</span>
+					</span>
+		</div>
+		<div class="form-group"
+				[ngClass]="{'has-error': form.get('description').invalid && form.get('description').touched}">
+			<label for="description">Description</label>
+			<input 
+					type="text" 
+					class="form-control"
+					id="description"
+					formControlName="description"
+					[value]=vacation.description>
+					<span *ngIf="form.get('description').invalid && form.get('description').touched">
+						<span *ngIf="form.get('description')['errors'].required">
+							No description of vacation
+						</span>
+					</span>
+		</div>
+		<div class="form-group">
+			<button 
+					type="submit"
+					[disabled]="form.invalid">Edit vacation</button>
+		</div>
+	</form>
+</div>

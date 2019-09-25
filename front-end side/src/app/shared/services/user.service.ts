@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { User } from '../../shared/models/user.model';
+import { Vacation } from '../../shared/models/vacation.model';
 
 @Injectable({
 	providedIn: 'root'
@@ -25,17 +26,7 @@ export class UserService{
 			else { return undefined} }));
 	}
 
-	addUser(username, password, name, employment_date): Observable<any>{
-		const user = {
-			username: username,
-			password: password,
-			name: name,
-			employment_date: employment_date
-		};
-		return this.http.post(`${this.uri}/system/employee/add`, user);
-	}
-
-  	getUserByUserName(usersArray){
+  	getUserByUserName(usersArray: User[]){
   		return usersArray.find(user => user.username === JSON.parse(window.localStorage.getItem('user')).username); 
   	}
 
@@ -47,11 +38,15 @@ export class UserService{
 		return this.http.post<User>(`${this.uri}/system/employee/${user.username}`, user);
 	}
 
-	deleteVacation(user, idVacation):Observable<void> {
+	deleteVacation(user: User, idVacation: number):Observable<void> {
 		return this.http.delete<void>(`${this.uri}/system/employee/${user.username}/${idVacation}`);
 	}
 
-	getIndexOfArrayByIdElement(id, vacationsArray) {
+	editVacation(id: number, username: string, vacation: Vacation): Observable<Vacation>{
+		return this.http.put<Vacation>(`${this.uri}/system/employee/${username}/${id}`, vacation);
+	}
+
+	getIndexOfArrayByIdElement(id: number, vacationsArray: Vacation []) {
 		for (let i = 0; i < vacationsArray.length; i++) {
 			if (vacationsArray[i].id === id) {
 				return i;
@@ -59,7 +54,7 @@ export class UserService{
 		}
 	}
 
-	getVacationById(id, listOfVacations){
+	getVacationById(id: number, listOfVacations: Vacation []){
 		for(let i = 0; i < listOfVacations.length; i++){
 			if(listOfVacations[i].id === id){
 				return listOfVacations[i];

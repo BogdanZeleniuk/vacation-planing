@@ -29,10 +29,15 @@
      <td><button (click)="removeVacation(v.id)">Remove</button></td>
    </tr>  
 </table>
-
-<div class="add-vacation-btn">
-     <button class="add-vacation" (click)="addVacation()">Add vacation</button>
-</div>
-<div *ngIf="isOpen">
-     <app-vacation [users]="users" [vacations]="vacations" (onVacationAdd)="newVacationAdded($event)" (onVacationUpdate)="onVacationUpdate($event)"></app-vacation>
+<div *ngIf="isLoaded">
+  <div class="add-vacation-btn">
+       <button class="add-vacation" (click)="addVacation()">Add vacation</button>
+  </div>
+  <div *ngIf="isOpen">
+       <app-vacation [users]="users" [vacations]="vacations" (onVacationAdd)="newVacationAdded($event)" (onVacationUpdate)="onVacationUpdate($event)"></app-vacation>
+  </div>
+  <div class="edit-form" *ngIf="openEditBlock">
+        <app-edit-vacation [users]="users" [vacations]="vacations" [vacation]="vacation" 
+        (onVacationEdit)="onVacationEdit($event)"></app-edit-vacation>
+  </div>
 </div>

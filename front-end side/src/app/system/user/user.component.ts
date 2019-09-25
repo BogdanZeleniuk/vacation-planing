@@ -15,6 +15,9 @@ import { User } from '../../shared/models/user.model';
 export class UserComponent implements OnInit {
 
 	isOpen: boolean = false;
+	openEditBlock: boolean = false;
+	isLoaded = false;	
+	subscription: Subscription;
 
   constructor(
   			private userService: UserService,
@@ -25,18 +28,23 @@ export class UserComponent implements OnInit {
 	@Output() users: User[] = [];
 	user: User;
 	@Output() vacations: Vacation[];
+	@Output() vacation;
 
 	ngOnInit(){
-		Observable.combineLatest(
+		this.subscription = Observable.combineLatest(
 			this.userService.getUsers(),
 			this.userService.getUserByUserNameFromDB(JSON.parse(window.localStorage.getItem('user')).username)
 			).subscribe((data: [User[], User]) => {
-				console.log(data);
 			this.users = data[0];
 			this.user = data[1][0];
 			this.vacations = this.user.vacations;
-		});		
+		});
+		this.isLoaded = true;		
 	}
+
+	ngOnDestroy(){
+  		if(this.subscription) this.subscription.unsubscribe();
+  	}
 
 	addVacation(){
 		this.isOpen = !this.isOpen;
@@ -73,14 +81,10 @@ export class UserComponent implements OnInit {
 
 			this.userService
 					.deleteVacation(this.user, id)
-					.subscribe((data) => {
-						console.log(data);
-				});
+					.subscribe((data) => {});
 			this.userService
 					.updateUser(this.user)
-					.subscribe((data) => {
-						console.log(data);
-					});
+					.subscribe((data) => {});
 
 		} else {
 			console.log("Delete rejection");
@@ -88,6 +92,19 @@ export class UserComponent implements OnInit {
 	}
 
 	editVacation(id){
-		this.router.navigate(['/system', 'employee', `${this.user.username}`, `${id}`]);
+		this.openEditBlock = !this.openEditBlock;
+		this.vacation = this.userService.getVacationById(id, this.user.vacations);
+	}
+
+	onVacationEdit(user: User){
+
+		this.user.vacationDays[0].previousYearVacationDays = user.vacationDays[0].previousYearVacationDays;
+		this.user.vacationDays[0].usedDays = user.vacationDays[0].usedDays;
+		this.user.vacationDays[1].currentYearVacationDays = user.vacationDays[1].currentYearVacationDays;
+		this.user.vacationDays[1].usedDays = user.vacationDays[1].usedDays;
+
+		this.userService
+					.updateUser(this.user)
+					.subscribe((data) => {});				
 	}
 }

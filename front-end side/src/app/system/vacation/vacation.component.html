@@ -27,7 +27,7 @@
 					formControlName="end_vacation"
 					[value]="10.10.2019">
 					<span *ngIf="form.get('end_vacation').invalid && form.get('end_vacation').touched">
-						<span *ngIf="form.get('password')['errors'].required">
+						<span *ngIf="form.get('end_vacation')['errors'].required">
 							Please, select end day of your vacation
 						</span>
 					</span>
