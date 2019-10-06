@@ -1,7 +1,13 @@
 # ExistekNewTest
 
-   To start Node.js server print "npm run dev" in your command line.
-   To start Angular print "ng serve" in your second command line.
+   To start ***Node.js server*** print "npm run dev" in your command line.   
+   To start ***Angular*** print "ng serve" in your second command line.   
+   The list of users in data base Mongo is:   
+   * user - **user@gmail.com** (password **123456789**)   
+   * user - **user@mail.ru** (password **123456789**)   
+   * user - **user@ukr.net** (password **123456789**)   
+   * user - **user@i.ua** (password **123456789**)   
+   * user - **user@ms.ua** (password **123456789**)
 
 
 Functional description 
