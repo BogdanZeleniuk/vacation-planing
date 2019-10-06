@@ -13,6 +13,16 @@
     (user.vacationDays[1].currentYearVacationDays - user.vacationDays[1].usedDays)}}</td>
    </tr>  
 </table>
+<div class="filter-btn">
+  <button (click)="openFilter()">Open filter</button>
+</div>
+<div *ngIf="isFilterVisible">
+    <app-year-filter
+      (onFilterCancel)="onFilterCancel()"
+      (onFilterApply)="onFilterApply($event)"
+      [vacations]="vacations"
+      ></app-year-filter>
+</div>
 <table>
   <tr>
      <td>id</td>
@@ -20,7 +30,7 @@
      <td>End Vacation</td>
      <td>Description</td>
    </tr> 
-   <tr *ngFor="let v of vacations">
+   <tr *ngFor="let v of filteredVacations">
      <td>{{v.id}}</td>
      <td>{{v.start_vacation}}</td>
      <td>{{v.end_vacation}}</td>

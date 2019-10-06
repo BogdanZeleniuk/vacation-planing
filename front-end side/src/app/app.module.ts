@@ -6,7 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { UserService } from './shared/services/user.service';
 import { AuthService } from './shared/services/auth.service';
-import { AuthModule } from './auth/auth.modul';
+import { AuthModule } from './auth/auth.module';
 import { AuthGuard } from './shared/services/auth.guard';
 import { NotFoundComponent } from './shared/components/not-found/not-found.component';
 

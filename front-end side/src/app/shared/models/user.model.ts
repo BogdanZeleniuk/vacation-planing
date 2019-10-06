@@ -6,7 +6,8 @@ export class User{
 		public password: string,
 		public name: string,
 		public employment_date: string,
-		public vacationDays: [],
+		public vacationDays: [{previousYearVacationDays: number, usedDays: number}, 
+								{currentYearVacationDays: number, usedDays: number}],
 		public vacations: Vacation []
 	){}
 }

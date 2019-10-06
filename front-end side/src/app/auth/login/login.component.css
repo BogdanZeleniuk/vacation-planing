@@ -1,3 +1,19 @@
-.has-error{
+.has-error {
 	border: 2px solid red;
+}
+p{
+	margin: 0 0 5px 0;
+}
+.form-group {
+	margin: 0 0 5px 0;
+}
+label {
+	margin: 0 10px 0 0;
+}
+.show-error {
+	font-weight: 300;
+}
+.alert-danger {
+	border: 2px solid red;
+	background-color: red;
 }

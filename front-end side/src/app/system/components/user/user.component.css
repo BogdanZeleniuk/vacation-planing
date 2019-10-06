@@ -1,0 +1,11 @@
+table{
+	width: 700px;
+	margin: auto;
+
+}
+
+.filter-btn{
+	display: flex;
+	flex-direction: row-reverse;
+	width: 90%;
+}

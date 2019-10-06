@@ -1,0 +1,6 @@
+.filter-header{
+	display: inline-flex;
+	flex-direction: row-reverse;
+	height: 25px;
+	width: 90%;
+}

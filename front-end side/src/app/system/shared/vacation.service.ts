@@ -6,8 +6,57 @@ import { Injectable } from '@angular/core';
 
 export class VacationService{
 
+	isBusinessDay(day){
+		if(day.getDay() == 6 || day.getDay() == 0){
+			return false;
+		}
+		return true;
+	}
+
+	getDaysInPeriod(startDate, endDate){
+		const dates = [];
+
+    	let currentDate = new Date(
+        	startDate.getFullYear(),
+        	startDate.getMonth(),
+        	startDate.getDate()
+    	);
+
+    	while (currentDate <= endDate) {
+        	dates.push(currentDate);
+
+        	currentDate = new Date(
+            	currentDate.getFullYear(),
+            	currentDate.getMonth(),
+            	currentDate.getDate() + 1
+        	);
+    	}
+
+    	return dates;
+	}
+
+	getBusinessDaysInVacation(vacationPeriod){
+		let correctedVacation = [];
+		vacationPeriod.forEach((vacationsDay) => {
+			if(this.isBusinessDay(vacationsDay)){
+				correctedVacation.push(vacationsDay);
+			}
+		});
+
+		return correctedVacation;
+	}
+
 	getAmountOfSelectedDays(formFromPage){
-  		return +(Date.parse(formFromPage.end_vacation) - Date.parse(formFromPage.start_vacation))/(1000*60*60*24);
+
+		let startDate = new Date(formFromPage.start_vacation.split('-')[0],
+				(formFromPage.start_vacation.split('-')[1]-1),
+				formFromPage.start_vacation.split('-')[2]);
+
+		let endDate = new Date(formFromPage.end_vacation.split('-')[0],
+				(formFromPage.end_vacation.split('-')[1]-1),
+				formFromPage.end_vacation.split('-')[2]);
+		
+  		return this.getBusinessDaysInVacation(this.getDaysInPeriod(startDate, endDate)).length;
   	}
 
  	 getAvailableVacationDays(user){

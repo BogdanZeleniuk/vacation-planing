@@ -3,10 +3,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { combineLatest } from 'rxjs';
 import { Observable, Subscription } from 'rxjs/Rx';
 
-import { Vacation } from '../../shared/models/vacation.model';
-import { User } from '../../shared/models/user.model';
-import { UserService } from '../../shared/services/user.service';
-import { VacationService } from '../shared/vacation.service';
+import { Vacation } from '../../../shared/models/vacation.model';
+import { User } from '../../../shared/models/user.model';
+import { UserService } from '../../../shared/services/user.service';
+import { VacationService } from '../../shared/vacation.service';
+import { Message } from '../../../shared/models/message.model';
 
 @Component({
   selector: 'app-edit-vacation',
@@ -20,6 +21,8 @@ export class EditVacationComponent implements OnInit {
 	@Input() vacation: Vacation;
 	user: User;
 	subscription: Subscription;
+	isLoaded: boolean;
+	message: Message;
 
 	@Output() onVacationEdit = new EventEmitter<User>();
 
@@ -31,12 +34,21 @@ export class EditVacationComponent implements OnInit {
   			) { }
 
   ngOnInit() {
+  	this.message = new Message('danger', '');
   	this.form = new FormGroup({
   		'start_vacation': new FormControl(null, [Validators.required]),
   		'end_vacation': new FormControl(null, [Validators.required]),
   		'description': new FormControl(null, [Validators.required]),
   	});
-  	this.user = this.userService.getUserByUserName(this.users);
+  		this.user = this.userService.getUserByUserName(this.users);
+  		this.isLoaded = true;              
+  }
+
+  private showMessage(message: Message){
+    this.message = message;
+    window.setTimeout(() => {
+      this.message.text = '';
+    }, 5000);
   }
 
   onSubmit(){
@@ -72,11 +84,18 @@ export class EditVacationComponent implements OnInit {
 				}
 			}
 			else{
-				console.log('Too many days for vacation');
+				this.showMessage({
+                        text: 'Too many days for vacation',
+                        type: 'danger'
+                  });
+				return;	
 			}
 		}
 		else{
-			console.log("no changes!");
+			this.showMessage({
+                        text: 'Vacation was edited successfully!',
+                        type: 'success'
+            });
 		}
 
 	this.subscription = this.userService

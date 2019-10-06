@@ -1,6 +1,9 @@
-<p>Please choise your time period of vacation</p>
-
+<p>Edit vacation {{vacation.id}}</p>
+<div *ngIf="isLoaded">
 <div class="container">
+	<div class="alert alert-{{message.type}}"
+    	*ngIf="message.text"
+    >{{message.text}}</div>
 	<form [formGroup]="form" (ngSubmit)="onSubmit()">
 		<div class="form-group"
 				[ngClass]="{'has-error': form.get('start_vacation').invalid && form.get('start_vacation').touched}">
@@ -10,10 +13,10 @@
 					class="form-control"
 					formControlName="start_vacation"
 					id="start_vacation"
-					[value]="01.10.2019">
+					[ngModel]=vacation.start_vacation>
 					<span *ngIf="form.get('start_vacation').invalid && form.get('start_vacation').touched">
 						<span *ngIf="form.get('start_vacation')['errors'].required">
-							Please, select start day of your vacation
+							<i>Please, select start day of your vacation</i>
 						</span>
 					</span>	
 		</div>
@@ -25,10 +28,10 @@
 					class="form-control"
 					id="end_vacation"
 					formControlName="end_vacation"
-					[value]="10.10.2019">
+					[ngModel]=vacation.end_vacation>
 					<span *ngIf="form.get('end_vacation').invalid && form.get('end_vacation').touched">
 						<span *ngIf="form.get('end_vacation')['errors'].required">
-							Please, select end day of your vacation
+							<i>Please, select end day of your vacation</i>
 						</span>
 					</span>
 		</div>
@@ -39,17 +42,19 @@
 					type="text" 
 					class="form-control"
 					id="description"
-					formControlName="description">
+					formControlName="description"
+					[ngModel]=vacation.description>
 					<span *ngIf="form.get('description').invalid && form.get('description').touched">
 						<span *ngIf="form.get('description')['errors'].required">
-							No description of vacation
+							<i>No description of vacation</i>
 						</span>
 					</span>
 		</div>
 		<div class="form-group">
 			<button 
 					type="submit"
-					[disabled]="form.invalid">Add vacation</button>
+					[disabled]="form.invalid">Edit vacation</button>
 		</div>
 	</form>
+</div>
 </div>

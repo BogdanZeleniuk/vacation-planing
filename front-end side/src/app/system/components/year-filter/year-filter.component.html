@@ -1,0 +1,21 @@
+        <div>
+              <div class="filter-content">
+                <div class="filter-header">
+                  <button type="button" class="close" (click)="closeFilter()">
+                    <span>Clear filter</span>
+                  </button>
+                </div>
+                <div class="filter-body">
+                  <div class="form-group">
+                    <label class="control-label" for="period">Choise period</label>
+                    <select class="form-control" id="period" [(ngModel)]="selectedPeriod">
+                      <option *ngFor="let t of timePeriods" [value]="t.year">{{t.label}}</option>
+                    </select>
+                  </div>
+                  <div class="filter-footer">
+                    <button type="button" class="btn btn-secondary" (click)="closeFilter()">Cancel</button>
+                    <button type="button" class="btn btn-primary" (click)="applyFilter()">Apply</button>
+                  </div>
+                </div>
+              </div>
+          </div>

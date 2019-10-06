@@ -2,10 +2,10 @@ import { Component, OnInit, Output } from '@angular/core';
 import { Observable, Subscription } from 'rxjs/Rx';
 import { Router } from '@angular/router';
 
-import { Vacation } from '../../shared/models/vacation.model';
-import { UserService } from '../../shared/services/user.service';
-import { VacationService } from '../shared/vacation.service';
-import { User } from '../../shared/models/user.model';
+import { Vacation } from '../../../shared/models/vacation.model';
+import { UserService } from '../../../shared/services/user.service';
+import { VacationService } from '../../shared/vacation.service';
+import { User } from '../../../shared/models/user.model';
 
 @Component({
   selector: 'app-user',
@@ -16,8 +16,10 @@ export class UserComponent implements OnInit {
 
 	isOpen: boolean = false;
 	openEditBlock: boolean = false;
+	filteredVacations: Vacation [] = [];
 	isLoaded = false;	
 	subscription: Subscription;
+	isFilterVisible: boolean = false;
 
   constructor(
   			private userService: UserService,
@@ -35,9 +37,11 @@ export class UserComponent implements OnInit {
 			this.userService.getUsers(),
 			this.userService.getUserByUserNameFromDB(JSON.parse(window.localStorage.getItem('user')).username)
 			).subscribe((data: [User[], User]) => {
-			this.users = data[0];
-			this.user = data[1][0];
-			this.vacations = this.user.vacations;
+			
+				this.users = data[0] ? data[0] : null;
+				this.user = data[1][0] ? data[1][0] : null;
+				this.vacations = this.user.vacations;
+				this.setOriginalVacations();
 		});
 		this.isLoaded = true;		
 	}
@@ -52,13 +56,14 @@ export class UserComponent implements OnInit {
 
 	newVacationAdded(vacation: Vacation){
 		this.vacations.push(vacation);
+		this.setOriginalVacations();
 	}
 
 	onVacationUpdate(user: User){
 			this.user.vacationDays[0].previousYearVacationDays = user.vacationDays[0].previousYearVacationDays;
 			this.user.vacationDays[0].usedDays = user.vacationDays[0].usedDays;
 			this.user.vacationDays[1].currentYearVacationDays = user.vacationDays[1].currentYearVacationDays;
-			this.user.vacationDays[1].usedDays = user.vacationDays[1].usedDays;
+			this.user.vacationDays[1].usedDays = user.vacationDays[1].usedDays;	
 	}
 
 	removeVacation(id){
@@ -86,8 +91,10 @@ export class UserComponent implements OnInit {
 					.updateUser(this.user)
 					.subscribe((data) => {});
 
+			this.setOriginalVacations();		
+
 		} else {
-			console.log("Delete rejection");
+			return;
 		}
 	}
 
@@ -105,6 +112,39 @@ export class UserComponent implements OnInit {
 
 		this.userService
 					.updateUser(this.user)
-					.subscribe((data) => {});				
+					.subscribe((data) => {});
+					
+		this.setOriginalVacations();				
 	}
+
+	private toogleFilterVisibility(dir: boolean){
+    	this.isFilterVisible = dir;
+  	}
+
+	setOriginalVacations(){
+    	this.filteredVacations = this.vacations.slice();
+  	}
+
+  	openFilter(){
+    	this.toogleFilterVisibility(true);
+ 	}
+
+  	onFilterCancel(){
+    	this.toogleFilterVisibility(false);
+    	this.setOriginalVacations();
+  	}
+
+  	onFilterApply(filterData){
+    	this.toogleFilterVisibility(false);
+    	this.setOriginalVacations();
+
+    	let filteredVacationsUpdated = [];
+
+	    this.filteredVacations.forEach((vac) => {
+	    	if(vac.start_vacation.split('-')[0] === filterData.period){
+	    		filteredVacationsUpdated.push(vac);
+	    	}
+	    });
+	    this.filteredVacations = filteredVacationsUpdated;
+  }
 }

@@ -13,7 +13,7 @@ import { UserService } from '../shared/services/user.service';
 export class SystemComponent implements OnInit {
 
 	today: Date = new Date();
-	user: User;
+	user!: User;
 
   constructor(
           private authService: AuthService, 

@@ -1,0 +1,8 @@
+.has-error{
+	border: 2px solid red;
+	font-weight: 300;
+}
+.alert-danger {
+	border: 2px solid red;
+	background-color: red;
+}

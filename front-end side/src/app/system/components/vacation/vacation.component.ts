@@ -4,10 +4,11 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Observable, Subscription } from 'rxjs/Rx';
 
 
-import { User } from '../../shared/models/user.model';
-import { Vacation } from '../../shared/models/vacation.model';
-import { UserService } from '../../shared/services/user.service';
-import { VacationService } from '../shared/vacation.service';
+import { User } from '../../../shared/models/user.model';
+import { Vacation } from '../../../shared/models/vacation.model';
+import { UserService } from '../../../shared/services/user.service';
+import { VacationService } from '../../shared/vacation.service';
+import { Message } from '../../../shared/models/message.model';
 
 @Component({
   selector: 'app-vacation',
@@ -30,13 +31,22 @@ export class VacationComponent implements OnInit {
 	user: User;
 	vacation: Vacation;
 	subscription: Subscription;
+  message: Message;
 
   ngOnInit() {
+    this.message = new Message('danger', '');
   	this.form = new FormGroup({
   		'start_vacation': new FormControl(null, [Validators.required]),
   		'end_vacation': new FormControl(null, [Validators.required]),
   		'description': new FormControl(null, [Validators.required]),
   	});
+  }
+
+  private showMessage(message: Message){
+    this.message = message;
+    window.setTimeout(() => {
+      this.message.text = '';
+    }, 5000);
   }
 
   onSubmit(){
@@ -57,8 +67,8 @@ export class VacationComponent implements OnInit {
   		if(this.vacationService.getRestDaysPreviousYear(this.user) < this.vacationService.getAmountOfSelectedDays(formData)){
   			restOfDaysToUse = this.vacationService.getAmountOfSelectedDays(formData) - this.vacationService.getRestDaysPreviousYear(this.user);
 
-  		this.vacationService.changePreviousYearUserDays(this.user, this.vacationService.getAmountOfSelectedDays(formData), restOfDaysToUse);
-  		this.vacationService.changeCurrentYearUserDays(this.user, restOfDaysToUse);
+        this.user.vacationDays[0].usedDays = this.user.vacationDays[0].previousYearVacationDays;
+  		  this.vacationService.changeCurrentYearUserDays(this.user, restOfDaysToUse);
 
   		} else {
   			restOfDaysToUse = this.vacationService.getAmountOfSelectedDays(formData);
@@ -71,7 +81,10 @@ export class VacationComponent implements OnInit {
 		});
   	}
   	else{
-  		console.log('You can not add this vacation');
+      this.showMessage({
+        text: 'Too many days for vacation',
+        type: 'danger'
+      });
   	}
   }
 

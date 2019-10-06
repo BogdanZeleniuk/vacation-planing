@@ -14,14 +14,16 @@ const mockDb = new MockDb();
 const urlDb = "mongodb://localhost:27017/userDatabase";
 const connection = mongoose.connection;
 
+mongoose.set('useFindAndModify', false);
+mongoose.set('useNewUrlParser', true);
+
 mongoose.connect(urlDb, { useNewUrlParser: true }).then(() => {
 	console.log("Connected to Database");
 }).catch((err) => {
-    console.log("Not Connected to Database ERROR! ", err);
+    console.log("Not connected to Database ERROR! ", err);
 });;
 
 connection.once('open', function () {
-    console.log("Connection to MongoDB");
     connection.dropCollection("users", function (err, result) {
         if (err) {
             console.log("Collection was NOT droped");
@@ -35,8 +37,7 @@ User.collection.insertMany(mockDb.addEntitiesIntoMongoDb(), (err, result) => {
 		if(err){
         	return console.log(err);
    		}
-   		console.log(JSON.stringify(result.ops));
-	});
+});
 
 app.use(bodyParser.json());
 app.use(urlEncodedParser);
@@ -71,7 +72,6 @@ router.route('/system/employee/:username/:id').put((req,res) => {
 				for (let i = 0; i < data.vacations.length; i++) {
 					if (data.vacations[i].id === +req.body.id) {
 						res.json(data.vacations[i]);
-						console.log("edit vacation SUCCESSFULLY");
 					}
 				}		
 			}
@@ -85,14 +85,11 @@ router.route('/system/employee/:username').post((req,res) => {
 				if(err){ console.log('Error updating user'); }
 				else { 
 					res.json(data);
-					console.log('User was updated SUCCESSFULLY'); 
 				}
 			});
 });
 
 router.route('/system/employee/:username/:id').delete((req,res) => {
-	console.log(req.params.username);
-	console.log(req.params.id);
 	User.findOne({username: req.params.username}, (err, user) => {
 		if (err) {res.json(err)}
 		else{
@@ -120,7 +117,6 @@ router.route('/login').get((req,res) => {
 			res.json(err)
 		}
 		else{
-			console.log("SUCCESSFULLY with username " + req.query.username);
 			res.json(user);
 		}
 	});
